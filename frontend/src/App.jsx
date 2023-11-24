@@ -8,7 +8,7 @@ function App() {
     <Container>
       <Router>
         <Header />
-
+<Route path="/" element={<Home}></Route>
         <Routes>
           <Route path="/:username" element={<UserPage />} />
           <Route path="/:username/post/:pid" element={<PostPage />} />
