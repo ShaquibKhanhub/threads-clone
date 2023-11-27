@@ -2,6 +2,7 @@ import React from "react";
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   Link,
   Menu,
@@ -13,9 +14,16 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { CgMoreO } from "react-icons/cg";
 import { BsInstagram } from "react-icons/bs";
-const UserHeader = () => {
+import {useRecoilValue} from 'recoil' 
+import userAtom from '../atoms/userAtom'
+import useFollowUnfollow from "../hooks/useFollowUnfollow";
+
+
+const UserHeader = ({user}) => {
+  const currentUser = useRecoilValue(userAtom) //this is current user which is currently logged in
   const toast = useToast();
   const CopyURL = () => {
     const currentURL = window.location.href;
@@ -29,6 +37,7 @@ const UserHeader = () => {
       });
     });
   };
+  const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
   return (
     <VStack gap={4} alignItems={"start"}>
       <Flex justifyContent={"space-between"} w={"full"}>
@@ -40,14 +49,14 @@ const UserHeader = () => {
             }}
             fontWeight={"bold"}
           >
-            Mark Zukerberg
+           {user.name}
           </Text>
           <Flex gap={2} alignItems={"center"}>
             <Text fontSize={{
                base:'xs',
                md:'sm',
                lg:'md'
-            }}>markzuckerberg</Text>
+            }}>{user.username}</Text>
             <Text
               fontSize={"xs"}
               bg={"gray.dark"}
@@ -62,22 +71,46 @@ const UserHeader = () => {
         </Box>
 
         <Box>
-          <Avatar
-            name="Makr Zukerberg"
-            src="/zuck-avatar.png"
+        {user.profilePic && (
+            <Avatar
+            name={user.name}
+            src={user.profilePic}
             size={{
               base: "md",
               md: "xl",
             }}
           />
+        )}
+         {!user.profilePic && (
+            <Avatar
+            name={user.name}
+            src='https://bit.ly/broken-link'
+            size={{
+              base: "md",
+              md: "xl",
+            }}
+          />
+        )}
         </Box>
       </Flex>
+
       <Text>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui quaerat
+       {user.bio}
       </Text>
+
+      {currentUser?._id === user._id && (
+				<Link as={RouterLink} to='/update'>
+					<Button size={"sm"}>Update Profile</Button>
+				</Link>
+			)}
+			{currentUser?._id !== user._id && (
+				<Button size={"sm"} onClick={handleFollowUnfollow} isLoading={updating}>
+					{following ? "Unfollow" : "Follow"}
+				</Button>
+			)}
       <Flex w={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
-          <Text color={"gray.light"}>3.2k followers</Text>
+          <Text color={"gray.light"}>{user.followers.length} followers</Text>
           <Box w={"1"} h={"1"} bg={"gray.light"} borderRadius={"full"}></Box>
           <Link color={"gray.light"}>instagram.com</Link>
         </Flex>

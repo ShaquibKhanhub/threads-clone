@@ -9,7 +9,7 @@ const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       // fetch
-      const res =await fetch("/api/users/logout", {
+      const res = await fetch("/api/users/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const LogoutButton = () => {
       size={"sm"}
       onClick={handleLogout}
     >
-    <FiLogOut size={20} />
+      <FiLogOut size={20} />
     </Button>
   );
 };

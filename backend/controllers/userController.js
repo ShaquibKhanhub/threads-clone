@@ -174,6 +174,7 @@ const updateUser = async (req, res) => {
 
     user = await user.save();
     //password should be null when we're getting the response
+
     user.password = null;
     res.status(200).json(user);
   } catch (err) {

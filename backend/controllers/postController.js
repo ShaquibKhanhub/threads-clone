@@ -1,17 +1,18 @@
 import User from "../models/UserModel.js";
 import Post from "../models/postModel.js";
+import { v2 as cloudinary } from "cloudinary";
 //CREATE POST
 const createPost = async (req, res) => {
   try {
     const { postedBy, text } = req.body;
-    
+    let { img } = req.body;
     if (!postedBy || !text) {
       return res
         .status(400)
         .json({ error: "Postedby and text fields are required" });
     }
     const user = await User.findById(postedBy);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     if (user._id.toString() !== req.user._id.toString()) {
       return res.status(401).json({ error: "Unauthorized to create post" });
@@ -22,6 +23,11 @@ const createPost = async (req, res) => {
       return res
         .status(400)
         .json({ error: `Text must be less than ${maxLength} characters` });
+    }
+
+    if (img) {
+      const uploadedResponse = await cloudinary.uploader.upload(img);
+      img = uploadedResponse.secure_url;
     }
 
     const newPost = new Post({ postedBy, text });
@@ -38,7 +44,7 @@ const createPost = async (req, res) => {
 const getPost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Post not Found" });
+    if (!post) return res.status(404).json({ error: "Post not Found" });
 
     res.status(200).json({ post });
   } catch (err) {
@@ -50,7 +56,7 @@ const getPost = async (req, res) => {
 const deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Post not Found" });
+    if (!post) return res.status(404).json({ error: "Post not Found" });
 
     if (post.postedBy.toString() !== req.user._id.toString()) {
       return res.status(401).json({ error: "Unauthorized to delete post" });
@@ -104,8 +110,7 @@ const replyToPost = async (req, res) => {
     const userId = req.user._id;
     const userProfilePic = req.user.profilePic;
     const username = req.user.username;
-    if (!text)
-      return res.status(400).json({ message: "Text field is required" });
+    if (!text) return res.status(400).json({ error: "Text field is required" });
 
     const post = await Post.findById(postId);
     if (!post) {
@@ -130,20 +135,19 @@ const getFeedPosts = async (req, res) => {
   try {
     const userId = req.user._id;
     const user = await User.findById(userId);
-   
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
     const following = user.following;
-    
+
     //here we're finding the post if it's  in the following array like people we're following and there posts
     const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({
       //sorting in dsc order
       createdAt: -1,
     });
- 
 
-    res.status(200).json({feedPosts});
+    res.status(200).json({ feedPosts });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
