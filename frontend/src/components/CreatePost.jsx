@@ -41,6 +41,7 @@ const CreatePost = () => {
   const { username } = useParams();
   const [loading, setLoading] = useState(false);
   const showToast = useShowToast();
+  
 
   const handleTextChange = (e) => {
     const inputText = e.target.value;
@@ -91,12 +92,12 @@ const CreatePost = () => {
       <Button
         position={"fixed"}
         bottom={10}
-        right={10}
-        leftIcon={<AddIcon />}
+        right={5}
+        size={{ base: "sm", sm: "md" }}
         bg={useColorModeValue("gray.300", "gray.dark")}
         onClick={onOpen}
       >
-        Post
+        <AddIcon />
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

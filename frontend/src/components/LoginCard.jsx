@@ -32,9 +32,8 @@ const LoginCard = () => {
   const setUser = useSetRecoilState(userAtom);
 
   const handleLogin = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      console.log(inputs);
       const res = await fetch("/api/users/login", {
         method: "POST",
         headers: {
@@ -52,8 +51,8 @@ const LoginCard = () => {
       console.log(data);
     } catch (error) {
       showToast("Error", error, "error");
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -115,7 +114,7 @@ const LoginCard = () => {
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button
-                loadingText="Submitting"
+                loadingText="Loggin in"
                 size="lg"
                 bg={useColorModeValue("gray.600", "gray.700")}
                 color={"white"}
