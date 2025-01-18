@@ -5,12 +5,21 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
+import cors from "cors";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+//CORS
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
