@@ -36,13 +36,16 @@ const SignupCard = () => {
   const handleSignUp = async () => {
     console.log(inputs);
     try {
-      const res = await fetch("/api/users/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(inputs),
-      });
+      const res = await fetch(
+        "https://gentle-courtesy-production.up.railway.app/api/users/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(inputs),
+        }
+      );
       const data = await res.json();
       if (data.error) {
         showToast("Error", data.error, "error");
