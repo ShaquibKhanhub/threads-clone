@@ -29,12 +29,13 @@ export default function UserProfileEdit() {
   const fileRef = useRef(null);
   const showToast = useShowToast();
   const { handleImageChange, imgUrl } = usePreviewImg();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(updating)return
     setUpdating(true)
     try {
-      const res = await fetch(`/api/users/update/${user._id}`, {
+      const res = await fetch(`${backendUrl}/api/users/update/${user._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

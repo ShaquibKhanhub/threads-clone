@@ -33,11 +33,13 @@ const SignupCard = () => {
     password: "",
   });
   const setUser = useSetRecoilState(userAtom);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const handleSignUp = async () => {
     console.log(inputs);
     try {
       const res = await fetch(
-        "https://gentle-courtesy-production.up.railway.app/api/users/signup",
+        `${backendUrl}/api/users/signup`,
         {
           method: "POST",
           headers: {

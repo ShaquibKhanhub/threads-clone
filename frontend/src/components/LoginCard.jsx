@@ -30,17 +30,20 @@ const LoginCard = () => {
   const [loading, setLoading] = useState(false);
   const showToast = useShowToast();
   const setUser = useSetRecoilState(userAtom);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const res = await fetch("https://gentle-courtesy-production.up.railway.app/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(inputs),
-      });
+      const res = await fetch(
+        `${backendUrl}/api/users/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(inputs),
+        }
+      );
       const data = await res.json();
       if (data.error) {
         showToast("Error", data.error, "error");

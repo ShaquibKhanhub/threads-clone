@@ -54,10 +54,11 @@ const CreatePost = () => {
       setRemainingChar(MAX_CHAR - inputText.length);
     }
   };
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleCreatePost = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/posts/create", {
+      const res = await fetch(`${backendUrl}/api/posts/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

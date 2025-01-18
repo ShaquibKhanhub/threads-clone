@@ -5,10 +5,10 @@ import useShowToast from "./useShowToast";
 const useLogout = () => {
 	const setUser = useSetRecoilState(userAtom);
 	const showToast = useShowToast();
-
+	const backendUrl = import.meta.env.VITE_BACKEND_URL;
 	const logout = async () => {
 		try {
-			const res = await fetch("/api/users/logout", {
+			const res = await fetch(`${backendUrl}/api/users/logout`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

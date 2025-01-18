@@ -30,6 +30,7 @@ const Actions = ({ post }) => {
   const [isReplying, setIsReplying] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleLikeAndUnlike = async () => {
     if (!user)
       return showToast(
@@ -40,7 +41,7 @@ const Actions = ({ post }) => {
     if (isLiking) return;
     setIsLiking(true);
     try {
-      const res = await fetch("/api/posts/like/" + post._id, {
+      const res = await fetch(`${backendUrl}/api/posts/like/` + post._id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +87,7 @@ const Actions = ({ post }) => {
     if (isReplying) return;
     setIsReplying(true);
     try {
-      const res = await fetch("/api/posts/reply/" + post._id, {
+      const res = await fetch(`${backendUrl}/api/posts/reply/` + post._id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

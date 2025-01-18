@@ -15,10 +15,12 @@ const Post = ({ post, postedBy }) => {
   const [posts, setPosts] = useRecoilState(postsAtom);
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch("/api/users/profile/" + postedBy);
+        const res = await fetch(`${backendUrl}/api/users/profile/` + postedBy);
 
         const data = await res.json();
 
@@ -40,7 +42,7 @@ const Post = ({ post, postedBy }) => {
       e.preventDefault();
       if (!window.confirm("Are you sure you want to delete this post?")) return;
 
-      const res = await fetch(`/api/posts/${post._id}`, {
+      const res = await fetch(`${backendUrl}/api/posts/${post._id}`, {
         method: "DELETE",
       });
       const data = await res.json();

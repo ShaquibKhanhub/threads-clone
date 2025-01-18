@@ -9,13 +9,15 @@ const HomePage = () => {
   const showToast = useShowToast();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useRecoilState(postsAtom);
-  console.log(posts);
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
   useEffect(() => {
     const getFeedPost = async () => {
       setLoading(true);
       setPosts([])
       try {
-        const res = await fetch("/api/posts/feed");
+        const res = await fetch(`${backendUrl}/api/posts/feed`);
         const data = await res.json();
         if (data.error) {
           showToast("Error", data.error, "error");

@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useShowToast from "./useShowToast";
 
@@ -7,10 +7,11 @@ const useGetUserProfile = () => {
   const [loading, setLoading] = useState(true);
   const { username } = useParams();
   const showToast = useShowToast();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch(`/api/users/profile/${username}`);
+        const res = await fetch(`${backendUrl}/api/users/profile/${username}`);
         const data = await res.json();
 
         if (data.error) {

@@ -14,13 +14,14 @@ const UserPage = () => {
 
   const [posts, setPosts] = useRecoilState(postsAtom);
   const [fetchingPosts, setFetchingPosts] = useState(true);
-
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
   useEffect(() => {
     const getPosts = async () => {
       // if (!user) return;
       setFetchingPosts(true);
       try {
-        const res = await fetch(`/api/posts/user/${username}`);
+        const res = await fetch(`${backendUrl}/api/posts/user/${username}`);
         const data = await res.json();
 
         setPosts(data);
