@@ -9,6 +9,7 @@ const HomePage = () => {
   const showToast = useShowToast();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useRecoilState(postsAtom);
+  console.log(posts);
   useEffect(() => {
     const getFeedPost = async () => {
       setLoading(true);
