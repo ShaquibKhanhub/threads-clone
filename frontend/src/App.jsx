@@ -48,9 +48,10 @@ function App() {
             }
           />
           <Route path="/:username/post/:pid" element={<PostPage />} />
+          {/* catch all routes */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
-     
     </Container>
   );
 }
