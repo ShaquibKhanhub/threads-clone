@@ -9,7 +9,7 @@ export default defineConfig({
     //Get rid of the cors error
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "https://gentle-courtesy-production.up.railway.app",
         changeOrigin: true,
         secure: false,
       },
