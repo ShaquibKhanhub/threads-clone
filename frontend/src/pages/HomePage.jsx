@@ -36,7 +36,7 @@ const HomePage = () => {
       }
     };
     getFeedPost();
-  }, [showToast, setPosts]);
+  }, [showToast, setPosts,backendUrl]);
   return (
     <Flex gap="10" alignItems={"flex-start"}>
       <Box flex={70}>

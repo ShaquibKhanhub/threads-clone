@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
 import cors from "cors";
+import protectRoute from "./middlewares/protectRoute.js";
 
 dotenv.config();
 connectDB();
