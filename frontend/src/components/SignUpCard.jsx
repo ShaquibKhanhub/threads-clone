@@ -38,16 +38,14 @@ const SignupCard = () => {
   const handleSignUp = async () => {
     console.log(inputs);
     try {
-      const res = await fetch(
-        `${backendUrl}/api/users/signup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(inputs),
-        }
-      );
+      const res = await fetch(`${backendUrl}/api/users/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputs),
+        credentials: "include",
+      });
       const data = await res.json();
       if (data.error) {
         showToast("Error", data.error, "error");

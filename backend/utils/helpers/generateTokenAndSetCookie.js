@@ -5,9 +5,10 @@ const generateTokenAndSetCookie = (userId, res) => {
     expiresIn: "30d",
   });
   res.cookie("jwt", token, {
-    httpOnly: true, // this cookie cannot be accessed by the browser
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 15 days
-    sameSite: "strict", // CSRF
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   return token;
 };

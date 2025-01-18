@@ -9,13 +9,12 @@ const HomePage = () => {
   const showToast = useShowToast();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useRecoilState(postsAtom);
-
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  
+
   useEffect(() => {
     const getFeedPost = async () => {
       setLoading(true);
-      setPosts([])
+      setPosts([]);
       try {
         const res = await fetch(`${backendUrl}/api/posts/feed`);
         const data = await res.json();
@@ -23,7 +22,7 @@ const HomePage = () => {
           showToast("Error", data.error, "error");
           return;
         }
-       
+
         setPosts(data);
       } catch (error) {
         showToast("Error", error.message, "error");
@@ -32,7 +31,7 @@ const HomePage = () => {
       }
     };
     getFeedPost();
-  }, [showToast,setPosts]);
+  }, [showToast, setPosts]);
   return (
     <Flex gap="10" alignItems={"flex-start"}>
       <Box flex={70}>
