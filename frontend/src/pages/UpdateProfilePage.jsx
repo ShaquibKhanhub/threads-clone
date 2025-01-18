@@ -41,6 +41,7 @@ export default function UserProfileEdit() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
+        credentials: "include",
       });
       const data = await res.json(); // updated user object
     console.log(data);

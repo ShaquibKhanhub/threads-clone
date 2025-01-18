@@ -16,8 +16,13 @@ const HomePage = () => {
       setLoading(true);
       setPosts([]);
       try {
-        const res = await fetch(`${backendUrl}/api/posts/feed`);
+        let res = await fetch(`${backendUrl}/api/posts/feed`, {
+          method: "GET",
+          credentials: "include",
+        });
+
         const data = await res.json();
+        console.log("data", data);
         if (data.error) {
           showToast("Error", data.error, "error");
           return;
