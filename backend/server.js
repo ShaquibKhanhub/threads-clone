@@ -16,7 +16,8 @@ const PORT = process.env.PORT || 5000;
 //CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin:
+      "https://threads-hejg-cbgcqulko-shaquibkhanhubs-projects.vercel.app",
     credentials: true,
   })
 );
