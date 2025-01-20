@@ -19,6 +19,7 @@ import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import postsAtom from "../atoms/postsAtom";
+import axiosInstance from "../utils/api";
 
 const Actions = ({ post }) => {
   const user = useRecoilValue(userAtom);
@@ -30,7 +31,6 @@ const Actions = ({ post }) => {
   const [isReplying, setIsReplying] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleLikeAndUnlike = async () => {
     if (!user)
       return showToast(
@@ -41,14 +41,8 @@ const Actions = ({ post }) => {
     if (isLiking) return;
     setIsLiking(true);
     try {
-      const res = await fetch(`${backendUrl}/api/posts/like/` + post._id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      const data = await res.json();
+      let res = await axiosInstance.put(`/api/posts/like/${post._id}`);
+      const data = res.data;
       if (data.error) return showToast("Error", data.error, "error");
 
       if (!liked) {
@@ -88,16 +82,10 @@ const Actions = ({ post }) => {
     if (isReplying) return;
     setIsReplying(true);
     try {
-      const res = await fetch(`${backendUrl}/api/posts/reply/` + post._id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: reply }),
-        credentials: "include",
+      let res = await axiosInstance.put(`/api/posts/reply/${post._id}`, {
+        text: reply,
       });
-      const data = await res.json();
-   
+      const data = res.data;
 
       if (data.error) return showToast("Error", data.error, "error");
       const updatedPosts = posts.map((p) => {
@@ -108,7 +96,7 @@ const Actions = ({ post }) => {
       });
       setPosts(updatedPosts);
       showToast("Success", "Reply posted successfully", "success");
-     
+
       onClose();
       setReply("");
     } catch (error) {

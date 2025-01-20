@@ -2,6 +2,7 @@ import { useState } from "react";
 import useShowToast from "./useShowToast";
 import userAtom from "../atoms/userAtom";
 import { useRecoilValue } from "recoil";
+import axiosInstance from "../utils/api";
 
 const useFollowUnfollow = (user) => {
   const currentUser = useRecoilValue(userAtom);
@@ -10,7 +11,6 @@ const useFollowUnfollow = (user) => {
   );
   const [updating, setUpdating] = useState(false);
   const showToast = useShowToast();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleFollowUnfollow = async () => {
     if (!currentUser) {
@@ -21,13 +21,9 @@ const useFollowUnfollow = (user) => {
 
     setUpdating(true);
     try {
-      const res = await fetch(`${backendUrl}/api/users/follow/${user._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
+      let res = await axiosInstance.post(`/api/users/follow/${user._id}`);
+      const data = res.data;
+      console.log("following", data);
       if (data.error) {
         showToast("Error", data.error, "error");
         return;

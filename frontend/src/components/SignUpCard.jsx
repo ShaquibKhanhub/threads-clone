@@ -13,7 +13,6 @@ import {
   Text,
   useColorModeValue,
   Link,
-  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -21,6 +20,7 @@ import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
 import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
+import axiosInstance from "../utils/api";
 
 const SignupCard = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,20 +33,13 @@ const SignupCard = () => {
     password: "",
   });
   const setUser = useSetRecoilState(userAtom);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSignUp = async () => {
     console.log(inputs);
     try {
-      const res = await fetch(`${backendUrl}/api/users/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(inputs),
-        credentials: "include",
-      });
-      const data = await res.json();
+      let res = await axiosInstance.post("/api/users/signup", inputs);
+      const data = res.data;
+
       if (data.error) {
         showToast("Error", data.error, "error");
         return;

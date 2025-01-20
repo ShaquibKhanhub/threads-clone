@@ -15,6 +15,7 @@ import { useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
+import axiosInstance from "../utils/api";
 
 export default function UserProfileEdit() {
   const [user, setUser] = useRecoilState(userAtom);
@@ -29,22 +30,17 @@ export default function UserProfileEdit() {
   const fileRef = useRef(null);
   const showToast = useShowToast();
   const { handleImageChange, imgUrl } = usePreviewImg();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(updating)return
-    setUpdating(true)
+    if (updating) return;
+    setUpdating(true);
     try {
-      const res = await fetch(`${backendUrl}/api/users/update/${user._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
-        credentials: "include",
+      let res = await axiosInstance.put(`/api/users/update/${user._id}`, {
+        ...inputs,
+        profilePic: imgUrl,
       });
-      const data = await res.json(); // updated user object
-    console.log(data);
+      const data = res.data; // updated user object
+      console.log(data);
       if (data.error) {
         showToast("Error", data.error, "error");
         return;
@@ -54,9 +50,8 @@ export default function UserProfileEdit() {
       localStorage.setItem("user-threads", JSON.stringify(data));
     } catch (error) {
       showToast("Error", error, "error");
-    }
-    finally{
-      setUpdating(false)
+    } finally {
+      setUpdating(false);
     }
   };
 

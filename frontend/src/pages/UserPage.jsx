@@ -7,6 +7,7 @@ import Post from "../components/Post";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
+import axiosInstance from "../utils/api";
 const UserPage = () => {
   const { username } = useParams();
   const { user, loading } = useGetUserProfile();
@@ -14,17 +15,14 @@ const UserPage = () => {
 
   const [posts, setPosts] = useRecoilState(postsAtom);
   const [fetchingPosts, setFetchingPosts] = useState(true);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  
+
   useEffect(() => {
     const getPosts = async () => {
       // if (!user) return;
       setFetchingPosts(true);
       try {
-        const res = await fetch(`${backendUrl}/api/posts/user/${username}`,{
-          credentials: "include",
-        });
-        const data = await res.json();
+        let res = await axiosInstance.get(`/api/posts/user/${username}`);
+        const data = res.data;
 
         setPosts(data);
       } catch (error) {

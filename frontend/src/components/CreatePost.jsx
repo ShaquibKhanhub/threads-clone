@@ -28,6 +28,7 @@ import postsAtom from "../atoms/postsAtom";
 import userAtom from "../atoms/userAtom";
 import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
+import axiosInstance from "../utils/api";
 
 const MAX_CHAR = 500;
 const CreatePost = () => {
@@ -41,7 +42,6 @@ const CreatePost = () => {
   const { username } = useParams();
   const [loading, setLoading] = useState(false);
   const showToast = useShowToast();
-  
 
   const handleTextChange = (e) => {
     const inputText = e.target.value;
@@ -54,24 +54,16 @@ const CreatePost = () => {
       setRemainingChar(MAX_CHAR - inputText.length);
     }
   };
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleCreatePost = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${backendUrl}/api/posts/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          postedBy: user._id,
-          text: postText,
-          img: imgUrl,
-        }),
-        credentials: "include",
+      let res = await axiosInstance.post("/api/posts/create", {
+        postedBy: user._id,
+        text: postText,
+        img: imgUrl,
       });
 
-      const data = await res.json();
+      const data = res.data;
       if (data.error) {
         showToast("Error", data.error, "error");
         return;

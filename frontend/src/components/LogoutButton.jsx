@@ -3,6 +3,7 @@ import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import { FiLogOut } from "react-icons/fi";
+import axiosInstance from "../utils/api";
 const LogoutButton = () => {
   const setUser = useSetRecoilState(userAtom);
   const showToast = useShowToast();
@@ -10,16 +11,9 @@ const LogoutButton = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const handleLogout = async () => {
     try {
-      // fetch
-      const res = await fetch(`${backendUrl}/api/users/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      const data = await res.json();
-     
+      let res = await axiosInstance.post(`${backendUrl}/api/users/logout`);
+      const data =  res.data;
+
       if (data.error) {
         showToast("Error", data.error, "error");
         return;

@@ -6,10 +6,8 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
 import cors from "cors";
-import protectRoute from "./middlewares/protectRoute.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,8 +15,9 @@ const PORT = process.env.PORT || 5000;
 //CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_URL|| "http://localhost:3000",
-    credentials: true,
+    origin: process.env.CLIENT_URL || "http://localhost:3000", // Client URL or localhost
+    credentials: true, // Allow cookies and credentials
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Explicitly allow PUT method
   })
 );
 
@@ -37,6 +36,7 @@ app.use(cookieParser()); //To use cookies
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 
-app.listen(PORT, () =>
-  console.log(`sever started at http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`sever started at http://localhost:${PORT}`);
+});

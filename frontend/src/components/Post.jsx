@@ -8,6 +8,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import postsAtom from "../atoms/postsAtom";
 import userAtom from "../atoms/userAtom";
+import axiosInstance from "../utils/api";
 
 const Post = ({ post, postedBy }) => {
   const [user, setUser] = useState(null);
@@ -16,15 +17,12 @@ const Post = ({ post, postedBy }) => {
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch(`${backendUrl}/api/users/profile/` + postedBy, {
-          credentials: "include",
-        });
-
-        const data = await res.json();
+      
+        let res = await axiosInstance.get(`/api/users/profile/${postedBy}`);
+        const data = res.data;
 
         if (data.error) {
           showToast("Error", data.error, "error");
@@ -44,11 +42,9 @@ const Post = ({ post, postedBy }) => {
       e.preventDefault();
       if (!window.confirm("Are you sure you want to delete this post?")) return;
 
-      const res = await fetch(`${backendUrl}/api/posts/${post._id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const data = await res.json();
+    
+      let res = await axiosInstance.delete(`/api/posts/${post._id}`);
+      const data =  res.data;
       if (data.error) {
         showToast("Error", data.error, "error");
         return;

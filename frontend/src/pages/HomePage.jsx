@@ -4,25 +4,21 @@ import useShowToast from "../hooks/useShowToast";
 import Post from "../components/Post";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
+import axiosInstance from "../utils/api";
 
 const HomePage = () => {
   const showToast = useShowToast();
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useRecoilState(postsAtom);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const getFeedPost = async () => {
       setLoading(true);
       setPosts([]);
       try {
-        let res = await fetch(`${backendUrl}/api/posts/feed`, {
-          method: "GET",
-          credentials: "include",
-        });
-
-        const data = await res.json();
-        console.log("data", data);
+        let res = await axiosInstance.get("/api/posts/feed");
+        const data = res.data;
+        console.log("data-posts", data);
         if (data.error) {
           showToast("Error", data.error, "error");
           return;
@@ -36,7 +32,7 @@ const HomePage = () => {
       }
     };
     getFeedPost();
-  }, [showToast, setPosts,backendUrl]);
+  }, [showToast, setPosts]);
   return (
     <Flex gap="10" alignItems={"flex-start"}>
       <Box flex={70}>

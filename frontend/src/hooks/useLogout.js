@@ -1,34 +1,30 @@
 import userAtom from "../atoms/userAtom";
 import { useSetRecoilState } from "recoil";
 import useShowToast from "./useShowToast";
+import axiosInstance from "../utils/api";
 
 const useLogout = () => {
-	const setUser = useSetRecoilState(userAtom);
-	const showToast = useShowToast();
-	const backendUrl = import.meta.env.VITE_BACKEND_URL;
-	const logout = async () => {
-		try {
-			const res = await fetch(`${backendUrl}/api/users/logout`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			const data = await res.json();
+  const setUser = useSetRecoilState(userAtom);
+  const showToast = useShowToast();
 
-			if (data.error) {
-				showToast("Error", data.error, "error");
-				return;
-			}
+  const logout = async () => {
+    try {
+      let res = await axiosInstance.post(`/api/users/logout`);
+      const data = res.data;
 
-			localStorage.removeItem("user-threads");
-			setUser(null);
-		} catch (error) {
-			showToast("Error", error, "error");
-		}
-	};
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
 
-	return logout;
+      localStorage.removeItem("user-threads");
+      setUser(null);
+    } catch (error) {
+      showToast("Error", error, "error");
+    }
+  };
+
+  return logout;
 };
 
 export default useLogout;

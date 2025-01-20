@@ -19,6 +19,7 @@ import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
 import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
+import axiosInstance from "../utils/api";
 
 const LoginCard = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,19 +31,15 @@ const LoginCard = () => {
   const [loading, setLoading] = useState(false);
   const showToast = useShowToast();
   const setUser = useSetRecoilState(userAtom);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${backendUrl}/api/users/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(inputs),
-        credentials: "include",
-      });
-      const data = await res.json();
+      
+      const res = await axiosInstance.post("/api/users/login", inputs);
+    
+      const data = res.data;
+      console.log("login", data);
       if (data.error) {
         showToast("Error", data.error, "error");
         return;
