@@ -2,15 +2,15 @@ import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 
 const protectRoute = async (req, res, next) => {
-  const token = req.cookies.jwt;
-
-  if (!token) {
-    console.log("No token provided"); // Log the absence of token
-    return res
-      .status(401)
-      .json({ success: false, message: "Unauthorized - no token provided" });
-  }
   try {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+      console.log("No token provided"); // Log the absence of token
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized - no token provided" });
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Token decoded", decoded); // Log the decoded token
 
